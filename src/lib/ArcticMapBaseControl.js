@@ -111,7 +111,7 @@ class ArcticMapBaseControl extends React.Component {
                             responseType: "json"
                         }).then(function (response) {
                             //console.log("response",response);
-                            var aDiv = document.createElement("Div");
+                            var aDiv = document.createElement("div");
 
                             // build unique url for the legend symbol
                             for (let i = 0; i < response.data.layers.length; i++) {
@@ -216,7 +216,7 @@ class ArcticMapBaseControl extends React.Component {
         });
         //layerList.selectionEnabled = true;
         layerList.selectionMode = "single";
-        
+
         reactiveUtils.watch(
             () => props.view.map.layers.filter((layer) => layer.visible).toArray(),
             (visibleLayers) => {
@@ -224,7 +224,7 @@ class ArcticMapBaseControl extends React.Component {
               //console.log(visibleLayers);
               //layerList.viewModel._recompileList();
             }
-          );            
+          );
         this.watchForLayerListChanges(layerList);
 
         reactiveUtils.on(

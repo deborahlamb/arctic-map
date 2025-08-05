@@ -134,7 +134,7 @@ class ArcticMapV4 extends React.Component {
                       view: self.state.view,
                       //ref: 'child-' + (index++)
                       ref: (c) => { if (c) { self.childrenElements.push(c); } return 'child-' + (index++) }
-          
+
                     });
                     let x = document.createElement('div');
                     view.ui.add(x, ele.props.location);
@@ -219,11 +219,11 @@ class ArcticMapV4 extends React.Component {
         view.popup.defaultPopupTemplateEnabled = true;
 	
         view.popup.watch("visible", function (visible) {
-          
+
           if (!visible) {
             view.graphics.removeAll();
           }
-    
+
         });
     
         view.popup.watch('selectedFeature', function (graphic) {

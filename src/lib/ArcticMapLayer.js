@@ -230,6 +230,9 @@ class ArcticMapLayer extends React.Component {
     
                     child.layerRef = maplayer;
                 }
+                else {
+                    console.log("non-dynamic layer in group: "+child.props.src);
+                }
     
                 gbmaplayer.layers.push(maplayer);
             });
@@ -539,15 +542,25 @@ class ArcticMapLayer extends React.Component {
             var allResponse = [];
             Promise.allSettled(self.children.map(function (item,index) {
                 return new Promise((res, rej) => {
+                    if(!item.params){
+                        item.params = new {};
+                    }
+                    if(!item.identifyTask){
+                        item.identifyTask = item.props.src;
+                        console.log("adding an id task to "+item.props.src);
+                    }
                     item.params.geometry = event.mapPoint;
                     item.params.mapExtent = self.state.view.extent;
-                    identify.identify(item.identifyTask, item.params).then(function (response) {
-                        response.layer=item;
-                        response.layer.layerRenderers = item.props.children;
-                        allResponse.push(response);
-                        res();
-                    });
-                    
+                    try{
+                        identify.identify(item.identifyTask, item.params).then(function (response) {
+                            response.layer=item;
+                            response.layer.layerRenderers = item.props.children;
+                            allResponse.push(response);
+                            res();
+                        });
+                    }catch{
+                        console.log("failed to run id task for "+item.props.src);                        
+                    }                   
                 });
             })).then(() => {callback(allResponse);});
         }   
@@ -556,10 +569,14 @@ class ArcticMapLayer extends React.Component {
 
             this.params.geometry = event.mapPoint;
             this.params.mapExtent = this.state.view.extent;
-            identify.identify(this.identifyTask, this.params).then(function (response) {
-                response.layer = self;
-                callback([response]);
-            });
+            try{
+                identify.identify(this.identifyTask, this.params).then(function (response) {
+                    response.layer = self;
+                    callback([response]);
+                });
+            }catch{
+                console.log("failed to run id task for a layer");                        
+            }      
         }
     }
 
